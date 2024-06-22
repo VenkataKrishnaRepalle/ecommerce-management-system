@@ -13,13 +13,15 @@ import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "orders")
+@Entity
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -32,8 +34,8 @@ public class Order {
     @JoinColumn(name = "user_uuid", nullable = false)
     private User user;
 
-    @ManyToMany(mappedBy = "orders", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Product> products;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OrderProduct> orderProducts;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;

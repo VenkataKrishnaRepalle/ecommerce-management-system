@@ -10,8 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.math.BigDecimal;
-import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Data
@@ -19,7 +18,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Product {
+@Table(name = "order_product")
+public class OrderProduct {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
@@ -27,20 +27,15 @@ public class Product {
     @Column(columnDefinition = "varchar(36)", updatable = false, nullable = false)
     private UUID uuid;
 
-    @ManyToOne
-    @JoinColumn(name = "category_uuid", nullable = false)
-    private Category category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_uuid")
+    @JsonIgnore
+    private Order order;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @Column(name = "price", nullable = false)
-    private BigDecimal price;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_uuid")
+    private Product product;
 
     @Column(name = "quantity", nullable = false)
     private Long quantity;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<OrderProduct> orderProducts;
 }

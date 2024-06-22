@@ -7,6 +7,7 @@ import com.learning.ecommercemanagementsystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -25,5 +26,10 @@ public class UserServiceImpl implements UserService {
     public User create(User user) {
         user.setUuid(UUID.randomUUID());
         return userRepository.save(user);
+    }
+
+    @Override
+    public List<User> getAll() {
+        return userRepository.findAll();
     }
 }
